@@ -1,0 +1,5 @@
+gnome-shell-extension-multi-monitors (0.00~git20160725.1.7390a66-1) unstable; urgency=medium
+
+  * Initial release (Closes: #847178)
+
+ -- Jonathan Carter <jcarter@linux.com>  Tue, 08 Nov 2016 14:47:32 +0200

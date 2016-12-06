@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	for TRANSLATION in multi-monitors-add-on@spin83/locale/* ; do \
+		echo "Processing $$TRANSLATION..."; \
+		msgfmt -cv -o $$TRANSLATION/LC_MESSAGES/multi-monitors-add-on.mo \
+		              $$TRANSLATION/LC_MESSAGES/multi-monitors-add-on.po; \
+	done
+	dh_auto_build

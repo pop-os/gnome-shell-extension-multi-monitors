@@ -4,9 +4,13 @@
 	dh $@
 
 override_dh_auto_build:
+	# Build translations
 	for TRANSLATION in multi-monitors-add-on@spin83/locale/* ; do \
 		echo "Processing $$TRANSLATION..."; \
 		msgfmt -cv -o $$TRANSLATION/LC_MESSAGES/multi-monitors-add-on.mo \
 		              $$TRANSLATION/LC_MESSAGES/multi-monitors-add-on.po; \
 	done
+	# Compile gschemas so that we don't ship upstream compiled version
+	glib-compile-schemas --strict --targetdir=multi-monitors-add-on@spin83/schemas/ multi-monitors-add-on@spin83/schemas
 	dh_auto_build
+

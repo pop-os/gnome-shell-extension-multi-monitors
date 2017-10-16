@@ -1,9 +1,9 @@
 Source: gnome-shell-extension-multi-monitors
 Section: gnome
 Priority: optional
-Maintainer: Jonathan Carter <jcarter@linux.com>
+Maintainer: Jonathan Carter <jcc@debian.org>
 Build-Depends: debhelper (>= 10), libglib2.0-bin, gettext
-Standards-Version: 3.9.8
+Standards-Version: 4.1.1
 Homepage: https://github.com/spin83/multi-monitors-add-on
 Vcs-Git: https://gitlab.com/highvoltage/gnome-shell-extension-multi-monitors-packaging.git
 Vcs-Browser: https://gitlab.com/highvoltage/gnome-shell-extension-multi-monitors-packaging/tree/master
@@ -12,7 +12,8 @@ Package: gnome-shell-extension-multi-monitors
 Architecture: all
 Depends: ${misc:Depends}, gnome-shell (>= 3.16)
 Description: Better support for additional monitors in GNOME shell
- A GNOME shell extension that makes the shell more friendly for multiple displays.
+ A GNOME shell extension that makes the shell more friendly for multiple
+ displays.
  .
  You can set whether the following should be present:
   * Plugin's own applet

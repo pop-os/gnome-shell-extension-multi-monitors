@@ -1,3 +1,14 @@
+gnome-shell-extension-multi-monitors (0.00~git20171014.1.df5d6e4-1) unstable; urgency=medium
+
+  * New upstream snapshot from git master (Closes: #878559)
+  * Update debian/copyright
+    - Add new copyright holder for Spanish translations
+  * Update debian/control
+    - Update maintainer e-mail address
+    - Update standards version to 4.1.1 (no related changes)
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 16 Oct 2017 09:22:08 +0200
+
 gnome-shell-extension-multi-monitors (0.00~git20160725.1.7390a66-1) unstable; urgency=medium
 
   * Initial release (Closes: #847178)

@@ -6,6 +6,10 @@ Files: *
 Copyright: 2016 spin83 (https://github.com/spin83)
 License: GPL-2+
 
+Files: locale/es/LC_MESSAGES/multi-monitors-add-on.po
+Copyright: 2017 Alonso Lara <alonso.lara.plana@gmail.com>
+License: GPL-2+
+
 Files: multi-monitors-add-on@spin83/convenience.js
 Copyright: 2011-2012 Giovanni Campagna <scampa.giovanni@gmail.com>
 License: BSD-3-Clause

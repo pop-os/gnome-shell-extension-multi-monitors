@@ -1,3 +1,16 @@
+gnome-shell-extension-multi-monitors (0.00~git20180920.1.0ca053f-1) unstable; urgency=medium
+
+  * New upstream snapshot (Closes: #905114)
+  * debian/control:
+    - Update standards version to 4.2.1 
+    - Update compat to level 11
+    - Depend on minimum gnome-shell version 3.24
+    - Move git repository to salsa.debian.org service
+    - Add Debian GNOME Maintainers to uploaders
+  * debian/changelog: Update copyright years
+
+ -- Jonathan Carter <jcc@debian.org>  Mon, 24 Sep 2018 15:21:25 +0200
+
 gnome-shell-extension-multi-monitors (0.00~git20171014.1.df5d6e4-1) unstable; urgency=medium
 
   * New upstream snapshot from git master (Closes: #878559)

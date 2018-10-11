@@ -1,1 +1,2 @@
-# This project has no tarball releases yet.
+version=4
+https://github.com/spin83/multi-monitors-add-on/releases .*/spin83/multi-monitors-add-on/archive/v?(\d\S*)\.tar\.gz

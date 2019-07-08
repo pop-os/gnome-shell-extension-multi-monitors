@@ -3,15 +3,15 @@ Section: gnome
 Priority: optional
 Maintainer: Jonathan Carter <jcc@debian.org>
 Uploaders: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
-Build-Depends: debhelper (>= 11), libglib2.0-bin, gettext
-Standards-Version: 4.2.1
+Build-Depends: debhelper-compat (= 12), libglib2.0-bin, gettext
+Standards-Version: 4.4.0
 Homepage: https://github.com/spin83/multi-monitors-add-on
 Vcs-Git: https://salsa.debian.org/gnome-team/shell-extensions/gnome-shell-extension-multi-monitors.git
 Vcs-Browser: https://salsa.debian.org/gnome-team/shell-extensions/gnome-shell-extension-multi-monitors
 
 Package: gnome-shell-extension-multi-monitors
 Architecture: all
-Depends: ${misc:Depends}, gnome-shell (>= 3.24)
+Depends: ${misc:Depends}, gnome-shell (>= 3.32)
 Description: Better support for additional monitors in GNOME shell
  A GNOME shell extension that makes the shell more friendly for multiple
  displays.

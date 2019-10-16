@@ -1,3 +1,11 @@
+gnome-shell-extension-multi-monitors (19-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update standards version to 4.4.1
+  * Update copyright years
+
+ -- Jonathan Carter <jcc@debian.org>  Wed, 16 Oct 2019 09:26:26 +0200
+
 gnome-shell-extension-multi-monitors (18-1) unstable; urgency=medium
 
   * Upload to unstable
@@ -8,7 +16,7 @@ gnome-shell-extension-multi-monitors (18-1) unstable; urgency=medium
 
 gnome-shell-extension-multi-monitors (18-1~exp1) experimental; urgency=medium
 
-  * New upstream release 
+  * New upstream release
   * Update standards version to 4.3.0
   * Upgrade to debhelper-compat (= 12)
 

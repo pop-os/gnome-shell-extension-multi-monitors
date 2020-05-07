@@ -24,6 +24,9 @@ const Main = imports.ui.main;
 
 const WorkspacesView = imports.ui.workspacesView;
 
+const Config = imports.misc.config;
+const GNOME_SHELL_VERSION = Config.PACKAGE_VERSION.split('.');
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const MultiMonitors = ExtensionUtils.getCurrentExtension();
 const Convenience = MultiMonitors.imports.convenience;
@@ -32,15 +35,12 @@ const MMLayout = MultiMonitors.imports.mmlayout;
 const MMOverview = MultiMonitors.imports.mmoverview;
 const MMIndicator = MultiMonitors.imports.indicator;
 
-const Config = imports.misc.config;
-
 const OVERRIDE_SCHEMA = 'org.gnome.shell.overrides';
 const MUTTER_SCHEMA = 'org.gnome.mutter';
 const WORKSPACES_ONLY_ON_PRIMARY_ID = 'workspaces-only-on-primary';
 
 const SHOW_INDICATOR_ID = 'show-indicator';
 const SHOW_THUMBNAILS_SLIDER_ID = 'show-thumbnails-slider';
-const GNOME_SHELL_VERSION = Config.PACKAGE_VERSION.split('.');
 
 function copyClass (s, d) {
 //	global.log(s.name +" > "+ d.name);
@@ -119,17 +119,20 @@ const MultiMonitorsAddOn = new Lang.Class({
 			if (workspacesDisplay._restackedNotifyId === undefined) {
 				workspacesDisplay._restackedNotifyId = 0;
 			}
-			workspacesDisplay.hide();
-			workspacesDisplay.actor._delegate = null;
-			workspacesDisplay.actor.destroy();
-			Main.overview.viewSelector._workspacesPage.hide();
-			Main.overview.viewSelector._workspacesPage.destroy();
-			workspacesDisplay.actor = null;
-			
-			workspacesDisplay = new MMOverview.MultiMonitorsWorkspacesDisplay();
-			Main.overview.viewSelector._workspacesDisplay = workspacesDisplay;
-			Main.overview.viewSelector._workspacesPage = Main.overview.viewSelector._addPage(workspacesDisplay.actor,
-	                                             _("Windows"), 'focus-windows-symbolic');
+			if (gnomeShellVersion()[1]<36) {
+				workspacesDisplay.hide();
+				workspacesDisplay.actor._delegate = null;
+				workspacesDisplay.actor.destroy();
+				Main.overview.viewSelector._workspacesPage.hide();
+				Main.overview.viewSelector._workspacesPage.destroy();
+				workspacesDisplay.actor = null;
+				
+				workspacesDisplay = new MMOverview.MultiMonitorsWorkspacesDisplay34();
+				Main.overview.viewSelector._workspacesDisplay = workspacesDisplay;
+				Main.overview.viewSelector._workspacesPage = Main.overview.viewSelector._addPage(workspacesDisplay.actor,
+		                                             _("Windows"), 'focus-windows-symbolic');
+			}
+
 			if (Main.overview.visible) {
 				Main.overview._controls._updateWorkspacesGeometry();
 				Main.overview.viewSelector._workspacesPage.show();
@@ -145,18 +148,21 @@ const MultiMonitorsAddOn = new Lang.Class({
 		if (Main.mmOverview) {
 			
 			if (!Main.overview.visible) {
-				let workspacesDisplay = Main.overview.viewSelector._workspacesDisplay;
-				workspacesDisplay.hide();
-				workspacesDisplay.actor._delegate = null;
-				workspacesDisplay.actor.destroy();
-				Main.overview.viewSelector._workspacesPage.hide();
-				Main.overview.viewSelector._workspacesPage.destroy();
-				workspacesDisplay.actor = null;
-				
-				workspacesDisplay = new WorkspacesView.WorkspacesDisplay();
-				Main.overview.viewSelector._workspacesDisplay = workspacesDisplay;
-				Main.overview.viewSelector._workspacesPage = Main.overview.viewSelector._addPage(workspacesDisplay.actor,
-		                                             _("Windows"), 'focus-windows-symbolic');
+				if (gnomeShellVersion()[1]<36) {
+					let workspacesDisplay = Main.overview.viewSelector._workspacesDisplay;
+					workspacesDisplay.hide();
+					workspacesDisplay.actor.destroy();
+					//workspacesDisplay.actor._delegate = null;
+					Main.overview.viewSelector._workspacesDisplay = null;
+					Main.overview.viewSelector._workspacesPage.hide();
+					Main.overview.viewSelector._workspacesPage.destroy();
+					workspacesDisplay.actor = null;
+					
+					workspacesDisplay = new WorkspacesView.WorkspacesDisplay();
+					Main.overview.viewSelector._workspacesDisplay = workspacesDisplay;
+					Main.overview.viewSelector._workspacesPage = Main.overview.viewSelector._addPage(workspacesDisplay.actor,
+			                                             _("Windows"), 'focus-windows-symbolic');
+				}
 			}
 			
 			for (let i = 0; i < Main.mmOverview.length; i++) {
@@ -240,9 +246,10 @@ let version = null;
 
 function init(extensionMeta) {
 	Convenience.initTranslations();
-    let theme = imports.gi.Gtk.IconTheme.get_default();
-    theme.append_search_path(extensionMeta.path + "/icons");
-    
+	if (gnomeShellVersion()[1]<36) {
+        let theme = imports.gi.Gtk.IconTheme.get_default();
+        theme.append_search_path(extensionMeta.path + "/icons");
+    }
     // fix bug in panel: Destroy function many time added to this same indicator.
     Main.panel._ensureIndicator = function(role) {
         let indicator = this.statusArea[role];
@@ -262,32 +269,50 @@ function init(extensionMeta) {
         return indicator;
     };
     
+	if (gnomeShellVersion()[1]<36) {
     // fix bug in workspacesView: Object, has been already deallocated — impossible to access it.
-    WorkspacesView.WorkspacesDisplay.prototype._parentSet = function(actor, oldParent) {
-        if (oldParent && this._notifyOpacityId)
-            oldParent.disconnect(this._notifyOpacityId);
-        this._notifyOpacityId = 0;
-
-        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
-        	if (!this.actor)
-        		return;
-            let newParent = this.actor.get_parent();
-            if (!newParent)
-                return;
-
-            // This is kinda hackish - we want the primary view to
-            // appear as parent of this.actor, though in reality it
-            // is added directly to Main.layoutManager.overviewGroup
-            this._notifyOpacityId = newParent.connect('notify::opacity', () => {
-                let opacity = this.actor.get_parent().opacity;
-                let primaryView = this._getPrimaryView();
-                if (!primaryView)
-                    return;
-                primaryView.actor.opacity = opacity;
-                primaryView.actor.visible = opacity != 0;
-            });
-        });
-    };
+	    WorkspacesView.WorkspacesDisplay.prototype._parentSet = function(actor, oldParent) {
+	        if (oldParent && this._notifyOpacityId)
+	            oldParent.disconnect(this._notifyOpacityId);
+	        this._notifyOpacityId = 0;
+	
+	        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
+	        	if (!this.actor)
+	        		return;
+	            let newParent = this.actor.get_parent();
+	            if (!newParent)
+	                return;
+	
+	            // This is kinda hackish - we want the primary view to
+	            // appear as parent of this.actor, though in reality it
+	            // is added directly to Main.layoutManager.overviewGroup
+	            this._notifyOpacityId = newParent.connect('notify::opacity', () => {
+	                let opacity = this.actor.get_parent().opacity;
+	                let primaryView = this._getPrimaryView();
+	                if (!primaryView)
+	                    return;
+	                primaryView.actor.opacity = opacity;
+	                primaryView.actor.visible = opacity != 0;
+	            });
+	        });
+	    };
+	}
+	else {
+		//Fix memory leak after destroying WorkspaceDisplay object.
+		let workspacesDisplay = Main.overview.viewSelector._workspacesDisplay;
+		workspacesDisplay.hide();
+		workspacesDisplay.destroy();
+		//workspacesDisplay._swipeTracker = null;
+		Main.overview.viewSelector._workspacesDisplay = null;
+		Main.overview.viewSelector._workspacesPage.hide();
+		Main.overview.viewSelector._workspacesPage.destroy();
+		
+		let workspaceAdjustment = Main.overview._overview._controls._workspaceAdjustment;
+		workspacesDisplay = new MMOverview.MultiMonitorsWorkspacesDisplay(workspaceAdjustment);
+		Main.overview.viewSelector._workspacesDisplay = workspacesDisplay;
+		Main.overview.viewSelector._workspacesPage = Main.overview.viewSelector._addPage(workspacesDisplay,
+                                             _("Windows"), 'focus-windows-symbolic');
+	}
 
 	if (gnomeShellVersion()[1]==32) {
 	    WorkspacesView.WorkspacesDisplay.prototype._updateWorkspacesFullGeometry = function() {

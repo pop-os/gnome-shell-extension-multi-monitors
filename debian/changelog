@@ -1,3 +1,11 @@
+gnome-shell-extension-multi-monitors (22-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #973468)
+  * Depend on gnome-shell (>= 3.38)
+  * Update standards version to 4.5.1
+
+ -- Jonathan Carter <jcc@debian.org>  Tue, 17 Nov 2020 10:22:40 +0200
+
 gnome-shell-extension-multi-monitors (20-1) unstable; urgency=medium
 
   * New upstream release (Closes: #956169)

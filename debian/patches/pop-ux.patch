@@ -51,8 +51,7 @@ Index: gnome-shell-extension-multi-monitors/multi-monitors-add-on@spin83/schemas
 -    
 +
      <key name="thumbnails-on-left-side" type="b">
--      <default>true</default>
-+      <default>false</default>
+       <default>true</default>
        <summary>Show Thumbnails-Slider on left side of additional monitors.</summary>
        <description>Toggle position of Thumbnails-Slider from right to left  on additional monitors.</description>
      </key>

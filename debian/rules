@@ -3,6 +3,8 @@
 %:
 	dh $@
 
+BASEDIR=debian/gnome-shell-extension-multi-monitors/usr/share/gnome-shell/extensions/multi-monitors-add-on@spin83
+
 override_dh_auto_build:
 	# Build translations
 	for TRANSLATION in multi-monitors-add-on@spin83/locale/* ; do \
@@ -10,7 +12,8 @@ override_dh_auto_build:
 		msgfmt -cv -o $$TRANSLATION/LC_MESSAGES/multi-monitors-add-on.mo \
 		              $$TRANSLATION/LC_MESSAGES/multi-monitors-add-on.po; \
 	done
-	# Compile gschemas so that we don't ship upstream compiled version
-	glib-compile-schemas --strict --targetdir=multi-monitors-add-on@spin83/schemas/ multi-monitors-add-on@spin83/schemas
 	dh_auto_build
 
+override_dh_install:
+	dh_install
+	rm -rf $(BASEDIR)/schemas

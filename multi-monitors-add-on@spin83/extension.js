@@ -94,12 +94,9 @@ class MultiMonitorsAddOn {
     }
 
     _showThumbnailsSlider() {
-        if (this._settings.get_boolean(SHOW_THUMBNAILS_SLIDER_ID)) {
-            if(this._ov_settings.get_boolean(WORKSPACES_ONLY_ON_PRIMARY_ID))
-                this._ov_settings.set_boolean(WORKSPACES_ONLY_ON_PRIMARY_ID, false);
-            if(this._mu_settings.get_boolean(WORKSPACES_ONLY_ON_PRIMARY_ID))
-                this._mu_settings.set_boolean(WORKSPACES_ONLY_ON_PRIMARY_ID, false);
-
+        if (this._settings.get_boolean(SHOW_THUMBNAILS_SLIDER_ID) &&
+            !this._ov_settings.get_boolean(WORKSPACES_ONLY_ON_PRIMARY_ID) &&
+            !this._mu_settings.get_boolean(WORKSPACES_ONLY_ON_PRIMARY_ID)) {
             if (Main.mmOverview)
                 return;
 
@@ -172,13 +169,6 @@ class MultiMonitorsAddOn {
 		}
     }
 
-    _switchOffThumbnails() {
-		if(this._ov_settings.get_boolean(WORKSPACES_ONLY_ON_PRIMARY_ID))
-			this._settings.set_boolean(SHOW_THUMBNAILS_SLIDER_ID, false);
-		if(this._mu_settings.get_boolean(WORKSPACES_ONLY_ON_PRIMARY_ID))
-			this._settings.set_boolean(SHOW_THUMBNAILS_SLIDER_ID, false);
-    }
-
     enable(version) {
 		global.log("Enable Multi Monitors Add-On ("+version+")...")
 		
@@ -187,10 +177,8 @@ class MultiMonitorsAddOn {
 		
 		this._mmMonitors = 0;
 
-		this._switchOffThumbnailsOvId = this._ov_settings.connect('changed::'+WORKSPACES_ONLY_ON_PRIMARY_ID,
-																	this._switchOffThumbnails.bind(this));
-		this._switchOffThumbnailsMuId = this._mu_settings.connect('changed::'+WORKSPACES_ONLY_ON_PRIMARY_ID,
-																	this._switchOffThumbnails.bind(this));
+		this._switchOffThumbnailsOvId = this._ov_settings.connect('changed::'+WORKSPACES_ONLY_ON_PRIMARY_ID, this._showThumbnailsSlider.bind(this));
+		this._switchOffThumbnailsMuId = this._mu_settings.connect('changed::'+WORKSPACES_ONLY_ON_PRIMARY_ID, this._showThumbnailsSlider.bind(this));
 
 		this._showIndicatorId = this._settings.connect('changed::'+SHOW_INDICATOR_ID, this._showIndicator.bind(this));
 		this._showIndicator();
